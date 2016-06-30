@@ -8,9 +8,13 @@
     partyService.$inject = ['$firebaseArray', 'firebaseDataService'];
     
     function partyService($firebaseArray, firebaseDataService) {
+        
+        var parties = null;
+        
         var service = {
             Party: Party,
-            getPartiesByUser: getPartiesByUser
+            getPartiesByUser: getPartiesByUser,
+            reset: reset                                  //break connection to firebase array
         };
         
         return service;
@@ -26,7 +30,21 @@
         }
         
         function getPartiesByUser(uid) {
-            return $firebaseArray(firebaseDataService.users.child(uid).child('parties'));
+            // if parties is null.
+                // create a firebasearray and set it equal to parties
+            // return parties
+            if (!parties) {
+                parties = $firebaseArray(firebaseDataService.users.child(uid).child('parties'));
+            }
+            return parties;
+        }
+        
+        function reset() {
+            //break connection to firebasearray
+            if(parties) {
+                parties.$destroy();
+                parties = null;
+            }
         }
     }
 
