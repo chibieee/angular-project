@@ -1,0 +1,18 @@
+{
+  "rules": {
+    "emails": {
+      ".read": false,                         //no user can read email data
+      ".write": "auth != null"                //whenever someone registers new acct, we send welcome email, we want them to be able to write at this location
+    },
+    "textMessages": {
+      ".read": false,
+      ".write": "auth != null"
+    },
+    "users": {
+      "$userId": {  //$variables represent child objects where you dont know the exact uids       
+        ".read": "auth != null && auth.uid == $userId",    //in order to read your own data, you must be logged in
+        ".write": "auth != null && auth.uid == $userId"
+      }
+    }
+  }
+}
